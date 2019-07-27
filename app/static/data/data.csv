@@ -1,0 +1,369 @@
+"account_name","account_id","impressions","clicks","priority","golden_set","comment","query","entity_parse","entity_output","(separator)","parse_conflicts","output_conflicts","text_conflicts","imp_conflicts","imp_missing","text_match_output","model_output"
+"DEMAND:ENG-US","8845970027.0","411496.0","21918.0","P1 - unknown","","","rooms for rent","[[0, ""prop"", ""rooms""], [6, ""intent"", ""for rent""]]","{""intent"": ""for rent"", ""prop"": ""room""}","|","yes","","","","","","[
+    [
+        0.946536, 
+        [
+            3.128605, 
+            0, 
+            ""rooms"", 
+            ""prop"", 
+            ""room""
+        ], 
+        [
+            3.118582, 
+            6, 
+            ""for rent"", 
+            ""intent"", 
+            ""for rent""
+        ]
+    ], 
+    [
+        0.942292, 
+        [
+            3.128605, 
+            0, 
+            ""rooms"", 
+            ""prop"", 
+            ""room""
+        ], 
+        [
+            5.0, 
+            6, 
+            ""for"", 
+            ""stopword"", 
+            ""for""
+        ], 
+        [
+            3.066056, 
+            10, 
+            ""rent"", 
+            ""intent"", 
+            ""rent""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","332412.0","11498.0","P1 - unknown","","","clearwater beach","[[0, ""poi"", ""clearwater beach""]]","{""poi"": ""united states=>florida=>clearwater=>clearwater beach""}","|","yes","","","","","","[
+    [
+        0.971482, 
+        [
+            6.128272, 
+            0, 
+            ""clearwater beach"", 
+            ""poi"", 
+            ""united states=>florida=>clearwater=>clearwater beach""
+        ]
+    ], 
+    [
+        0.95278, 
+        [
+            5.92928, 
+            0, 
+            ""clearwater"", 
+            ""dest"", 
+            ""united states=>florida=>pinellas county=>clearwater""
+        ], 
+        [
+            3.128605, 
+            11, 
+            ""beach"", 
+            ""prop_location_mod"", 
+            ""beach""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","323201.0","56229.0","P1 - unknown","","","vacation rentals","[[0, ""intent"", ""vacation rentals""]]","{""intent"": ""vacation rental""}","|","yes","","","","","","[
+    [
+        0.962142, 
+        [
+            3.235314, 
+            0, 
+            ""vacation rentals"", 
+            ""intent"", 
+            ""vacation rental""
+        ]
+    ], 
+    [
+        0.952646, 
+        [
+            3.272905, 
+            0, 
+            ""vacation"", 
+            ""intent"", 
+            ""vacation""
+        ], 
+        [
+            3.233113, 
+            9, 
+            ""rentals"", 
+            ""intent"", 
+            ""rental""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","277834.0","6333.0","P1 - unknown","","","homes for rent","[[0, ""intent"", ""homes for rent""]]","{""intent"": ""home for rent""}","|","yes","","","","","","[
+    [
+        0.973623, 
+        [
+            3.608539, 
+            0, 
+            ""homes for rent"", 
+            ""intent"", 
+            ""home for rent""
+        ]
+    ], 
+    [
+        0.946536, 
+        [
+            3.128605, 
+            0, 
+            ""homes"", 
+            ""intent"", 
+            ""home""
+        ], 
+        [
+            3.118582, 
+            6, 
+            ""for rent"", 
+            ""intent"", 
+            ""for rent""
+        ]
+    ], 
+    [
+        0.942292, 
+        [
+            3.128605, 
+            0, 
+            ""homes"", 
+            ""intent"", 
+            ""home""
+        ], 
+        [
+            5.0, 
+            6, 
+            ""for"", 
+            ""stopword"", 
+            ""for""
+        ], 
+        [
+            3.066056, 
+            10, 
+            ""rent"", 
+            ""intent"", 
+            ""rent""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","256150.0","568.0","P1 - unknown","","","mexico city hotels","[[0, ""dest"", ""mexico city""], [12, ""prop"", ""hotels""]]","{""dest"": ""mexico=>mexico city=>mexico city"", ""prop"": ""hotel""}","|","yes","","[[""dest"", ""mexico city""]]","","","{
+    ""mexico city"": [
+        [
+            ""mexico=>mexico city"", 
+            ""dest"", 
+            [
+                0.0, 
+                6397, 
+                6397
+            ]
+        ], 
+        [
+            ""mexico=>mexico city=>mexico city"", 
+            ""dest"", 
+            [
+                0.0, 
+                74153, 
+                84953
+            ]
+        ]
+    ]
+}","[
+    [
+        0.957496, 
+        [
+            5.58666, 
+            0, 
+            ""mexico city"", 
+            ""dest"", 
+            ""mexico=>mexico city=>mexico city""
+        ], 
+        [
+            3.184847, 
+            12, 
+            ""hotels"", 
+            ""prop"", 
+            ""hotel""
+        ]
+    ], 
+    [
+        0.937117, 
+        [
+            3.991889, 
+            0, 
+            ""mexico"", 
+            ""dest"", 
+            ""mexico""
+        ], 
+        [
+            3.066056, 
+            7, 
+            ""city"", 
+            ""prop_location_mod"", 
+            ""city""
+        ], 
+        [
+            3.184847, 
+            12, 
+            ""hotels"", 
+            ""prop"", 
+            ""hotel""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","226164.0","8284.0","P1 - unknown","","","home away rentals","[[0, ""comp"", ""home away""], [10, ""intent"", ""rentals""]]","{""comp"": ""homeaway"", ""intent"": ""rental""}","|","yes","","","","","","[
+    [
+        0.956218, 
+        [
+            3.443273, 
+            0, 
+            ""home away"", 
+            ""comp"", 
+            ""homeaway""
+        ], 
+        [
+            3.233113, 
+            10, 
+            ""rentals"", 
+            ""intent"", 
+            ""rental""
+        ]
+    ], 
+    [
+        0.948399, 
+        [
+            3.066056, 
+            0, 
+            ""home"", 
+            ""intent"", 
+            ""home""
+        ], 
+        [
+            4.773098, 
+            5, 
+            ""away"", 
+            ""stopword"", 
+            ""away""
+        ], 
+        [
+            3.233113, 
+            10, 
+            ""rentals"", 
+            ""intent"", 
+            ""rental""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","221065.0","162.0","P1 - unknown","","","kansas city hotels","[[0, ""dest"", ""kansas city""], [12, ""prop"", ""hotels""]]","{""dest"": ""united states=>missouri=>jackson county=>kansas city"", ""prop"": ""hotel""}","|","yes","","[[""dest"", ""kansas city""]]","","","{
+    ""kansas city"": [
+        [
+            ""united states=>missouri=>jackson county=>kansas city"", 
+            ""dest"", 
+            [
+                0.0, 
+                134251, 
+                135470
+            ]
+        ], 
+        [
+            ""united states=>kansas=>wyandotte county=>kansas city"", 
+            ""dest"", 
+            [
+                0.0, 
+                13694, 
+                14294
+            ]
+        ]
+    ]
+}","[
+    [
+        0.957496, 
+        [
+            6.08666, 
+            0, 
+            ""kansas city"", 
+            ""dest"", 
+            ""united states=>missouri=>jackson county=>kansas city""
+        ], 
+        [
+            3.184847, 
+            12, 
+            ""hotels"", 
+            ""prop"", 
+            ""hotel""
+        ]
+    ], 
+    [
+        0.940298, 
+        [
+            4.502298, 
+            0, 
+            ""kansas"", 
+            ""dest"", 
+            ""united states=>kansas""
+        ], 
+        [
+            3.066056, 
+            7, 
+            ""city"", 
+            ""prop_location_mod"", 
+            ""city""
+        ], 
+        [
+            3.184847, 
+            12, 
+            ""hotels"", 
+            ""prop"", 
+            ""hotel""
+        ]
+    ]
+]"
+"DEMAND:ENG-US","8845970027.0","168522.0","2425.0","P1 - unknown","","","cocoa beach hotels","[[0, ""dest"", ""cocoa beach""], [12, ""prop"", ""hotels""]]","{""dest"": ""united states=>florida=>brevard county=>cocoa beach"", ""prop"": ""hotel""}","|","yes","","","","","","[
+    [
+        0.957493, 
+        [
+            6.08653, 
+            0, 
+            ""cocoa beach"", 
+            ""dest"", 
+            ""united states=>florida=>brevard county=>cocoa beach""
+        ], 
+        [
+            3.184847, 
+            12, 
+            ""hotels"", 
+            ""prop"", 
+            ""hotel""
+        ]
+    ], 
+    [
+        0.940962, 
+        [
+            5.704871, 
+            0, 
+            ""cocoa"", 
+            ""dest"", 
+            ""united states=>florida=>brevard county=>cocoa""
+        ], 
+        [
+            3.128605, 
+            6, 
+            ""beach"", 
+            ""prop_location_mod"", 
+            ""beach""
+        ], 
+        [
+            3.184847, 
+            12, 
+            ""hotels"", 
+            ""prop"", 
+            ""hotel""
+        ]
+    ]
+]"

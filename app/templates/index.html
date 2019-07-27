@@ -1,0 +1,134 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="starter-template">
+      <h1>Experiment Result</h1>
+      <p class="lead">
+       Thanks for helping labeling data! The <strong>label</strong> column is defaultly left as unchecked for <strong>False</strong>. 
+      
+      </p>
+          <table class="table table-striped w-auto">
+              <!--Table head-->
+              <!-- "account_name","account_id","impressions","clicks","priority","golden_set","comment","query","entity_parse","entity_output","(separator)","parse_conflicts","output_conflicts","text_conflicts","imp_conflicts","imp_missing","text_match_output","model_output" -->
+              <thead>
+                <tr>
+                  <th>Index</th>
+                  <th>Label</th>
+                  <th>Account Name</th>
+                  <th>Account Id</th>
+                  <th>impressions</th>
+                  <th>Clicks</th>
+                  <th>Priority</th>
+                  <th>Golden Set</th>
+                  <th>Comment</th>
+                  <th>Query</th>
+                  <th>Entity Parse</th>
+                  <th>Entity Output</th>
+                  <th>Separator</th>
+                  <th>Parse Conflict</th>
+                  <th>Output Conflict</th>
+                  <th>Text Conflict</th>
+                  <th>Imp Conflict</th>
+                  <th>Imp Missing</th>
+                  <th>Text Match Output</th>
+                  <th>Model Output</th>
+                </tr>
+              </thead>
+              <!--Table body-->
+              {% for idx in params %}
+              <tbody>
+                <tr class="table-info">
+                <th scope="row">{{idx}}</th>
+                  <td>
+                      <div class="custom-control custom-checkbox" id="checkboxArrays">
+                          <input type="checkbox" class="custom-control-input" id="{{idx}}" name="checkboxes" value="{{idx}}">
+                          <label class="custom-control-label" for="defaultUnchecked"></label>
+                      </div>
+                  </td>
+                  <td>{{params[idx].account_name}}</td>
+                  <td>{{params[idx].account_id}}</td>
+                  <td>{{params[idx].impressions}}</td>
+                  <td>{{params[idx].clicks}}</td>
+                  <td>{{params[idx].priority}}</td>
+                  <td>{{params[idx].golden_set}}</td>
+                  <td>{{params[idx].comment}}</td>
+                  <td>{{params[idx].query}}</td>
+                  <td>{{params[idx].entity_parse}}</td>
+                  <td>{{params[idx].entity_output}}</td>
+                  <!-- here -->
+                  <td>{{params[idx].entity_output}}</td> 
+                  <td>{{params[idx].parse_conflicts}}</td>
+                  <td>{{params[idx].output_conflicts}}</td>
+                  <td>{{params[idx].text_conflicts}}</td>
+                  <td>{{params[idx].imp_conflicts}}</td>
+                  <td>{{params[idx].imp_missing}}</td>
+                  <td>{{params[idx].text_match_output}}</td>
+                  <td>
+                      
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                          Show Details
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Model Output Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                  {{params[idx].model_output}}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                  </td>
+                </th>
+                {% endfor%}
+              </tbody>
+              <!--Table body-->
+            </table>
+      </p>
+    </div>
+    <button id="submitInfo" type="button" class="btn btn-danger">Submit Labels!</button>
+  </div>
+
+
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery-2.1.4.min.js') }}"></script>
+
+  <script>
+    $(document).ready(() => {
+      $("#submitInfo").click(()=> {
+        console.log("Clicked")
+        var indexes = [];
+        $('#checkboxArrays input:checked').each(function() {
+          indexes.push(this.value);
+        });
+        console.log(indexes)
+    })
+  })
+  </script>
+
+{% endblock %}
+
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery-2.1.4.min.js') }}"></script>
+<script>
+  $("#submitInfo").click(() => {
+    console.log("onclick")
+  })
+</script> -->
+
+{% block footer %}
+  <!-- {% include "include/footer.html" %} -->
+{% endblock %}
