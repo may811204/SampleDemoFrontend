@@ -1,0 +1,19 @@
+{% extends 'layout/login_base.html' %}
+{% block body %}
+  <div class='row mt-5'>
+    <div class='col-4 mx-auto'>
+      <h4 class='text-center'>User Login</h4><hr>
+      <form action="{{url_for('login')}}" method='post'>
+	  	<div class='form-group'>
+          <label>Username</label>
+          <input type='text' name='username' required class='form-control'>
+        </div>
+        <div class='form-group'>
+          <label>Password</label>
+          <input type='password' name='password' required class='form-control'>
+        </div>
+        <input type='submit' name='submit' value='Submit' class='btn btn-success'>
+      </form>
+    </div>
+  </div>
+{% endblock %}
