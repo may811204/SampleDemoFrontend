@@ -1,11 +1,75 @@
-{% extends "layout/base.html" %}
-
+{% extends "layout/reports.html" %}
 {% block content %}
-  <div class="container">
-    <div class="container-fluid">
-        <h1>Role: {{ params }}</h1>
-    </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+  $("#search_button").click(function() {
+      var search_word = $("#search_box").val();
+      var dataString = 'search_word='+ search_word;
+      if(search_word==''){
+      }else{
+        $.ajax({
+          type: "POST",
+          url: "/searchdata",
+          data: dataString,
+          cache: false,
+          beforeSend: function(html) {
+              document.getElementById("insert_search").innerHTML = '';
+              $("#flash").show();
+              $("#searchword").show();
+              $(".searchword").html(search_word);
+              $("#flash").html('<img src="/static/images/loading.gif" align="absmiddle" width="200" height="200"> Loading Results...');
+            },
+          success: function(html){
+              $("#insert_search").show();
+              $("#insert_search").append(html.data);
+              $("#flash").hide();
+          }
+        });
+      }
+    return false;
+  });
+});
+</script>
+<body>
+<div align="center">
+  <div style="width:700px">
+  <div style="margin-top:20px; text-align:left">
+    <form method="get" action="">
+      <input type='text' name='search' id="search_box" required class='form-control'>
+      <input type="submit" value="Search" class="btn btn-success" id="search_button" />
+    <span style="color:#666666; font-size:14px; font-family:Arial, Helvetica, sans-serif;"><b>Ex :</b> search by VIN, sold or not, etc any keywords you like</span>
+    </form>
   </div>
+  <div>
+    <div id="searchword">Search results for <span class="searchword"></span></div>
+    <div id="flash"></div>
+    <ol id="insert_search" class="update"></ol>
+  </div>
+  </div>
+</div>
+<style>
+ol.update{
+ list-style:none;font-size:1.1em; margin-top:20px;padding-left:0;
+}
+#flash{
+ margin-top:20px;
+ text-align:left;
+}
+#searchword {
+ text-align:left; margin-top:20px; display:none;
+ font-family:Arial, Helvetica, sans-serif;
+ font-size:16px;
+ color:#000;
+}
+.searchword {
+ font-weight:bold;
+ color:#fe6f41;
+}
+ol.update li{ border-bottom:#dedede dashed 1px; text-align:left;padding-top:10px;padding-bottom:10px;}
+ol.update li:first-child{ border-top:#dedede dashed 1px; text-align:left}
+</style>
+</body>
 {% endblock %}
 {% block footer %}
   {% include "include/footer.html" %}

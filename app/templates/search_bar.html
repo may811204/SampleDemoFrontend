@@ -1,0 +1,68 @@
+{% block content %}
+<body>
+  <div class="container">
+    <div class="container-fluid">
+        <div class='row mt-5'>
+        <div class='col-4 mx-auto'>
+          <h4 class='text-center'>Search</h4><hr>
+          <form action="{{ url_for('public_search') }}" method="post">
+            <div class='form-group'>
+              <label>VIN</label>
+              <input type='text' name='vin' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Vehicle type</label>
+                <select class="form-control" name="vehicle_type" id="vehicle_type">
+                  <option selected>Select your vehicle type</option>
+                  {% for car_type in vehicles_types %}
+                    <option value= "{{car_type}}" SELECTED>{{car_type}}</option>"
+                  {% endfor %}
+                </select>
+            </div>
+            <div class='form-group'>
+              <label>Manufacturer</label>
+                <select class="browser-default custom-select" name="manufacturer">
+                  <option selected>Select your Manufacturer</option>
+                  {% for manufacturer in manufacturers %}
+                    <option value= "{{manufacturer}}" SELECTED>{{manufacturer}}</option>"
+                  {% endfor %}
+                </select>
+            </div>
+            <div class='form-group'>
+              <label>Model Year</label>
+              <input type='text' name='model_year' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Color</label>
+                <select class="browser-default custom-select" name="color">
+                  <option selected>Select your Model Color</option>
+                  {% for colour in colors %}
+                    <option value= "{{colour}}" SELECTED>{{colour}}</option>"
+                  {% endfor %}
+                </select>
+            </div>
+            <div class='form-group'>
+              <label>List Price</label>
+              <input type='text' name='list_price' required class='form-control'>
+            </div>
+           <div class='form-group'>
+              <label>Key Word</label>
+              <input type='text' name='key_word' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Vehicles Status</label>
+                <select class="browser-default custom-select">
+                  <option selected>Filter on whether sold or not</option>
+                  <option value="sold">Sold</option>
+                  <option value="unsold">Unsold</option>
+                  <option value="all">All</option>
+                </select>
+            </div>
+            <input type='submit' name='submit' value='Submit' class='btn btn-success'>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

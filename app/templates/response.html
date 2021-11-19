@@ -1,0 +1,5 @@
+{% for row in records %}
+  <li>
+    VIN: {{row.vin}} Invoice Price: <span style='font-size:12px;'>{{row.invoice_price}}</span> {{row.manu_name}} <input type='submit' name='submit' value='view' class='btn btn-success'>
+  </li>
+{% endfor %}

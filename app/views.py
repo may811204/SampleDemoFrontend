@@ -1,6 +1,7 @@
-from flask import Flask, redirect, url_for, render_template, request, flash, session
+from flask import Flask, redirect, url_for, render_template, request, flash, session, jsonify
 import mysql.connector as mysql
 from functools import wraps
+from app.constants import Colors, Manufacturer, VehicleTypes
 from app import app
 
 MANAGER = "Manager"
@@ -10,9 +11,7 @@ SERVICE_WRITER = "ServiceWriter"
 ANONYMOUS = "anonymous"
 ROLAND_AROUND = "Owner"
 
-db_connection = mysql.connect(host='50.87.253.41', database='charljl4_jj', user='charljl4_team007', password='team007',
-                              port=3306)
-
+db_connection = mysql.connect(host='50.87.253.41', database='charljl4_jj', user='charljl4_team007', password='team007',port=3306)
 
 # https://github.com/ashishsarkar/UserLogin/blob/master/app.py
 # check if user logged in
@@ -24,7 +23,6 @@ def is_logged_in(f):
         else:
             flash('Unauthorized, Please Login with correct credential', 'danger')
             return redirect(url_for('login'))
-
     return wrap
 
 
@@ -101,7 +99,7 @@ def add_vehicle():
         session['vin'] = vin
         flash('Registration Successfully. Login Here...', 'success')
         return redirect('view_vehicle')
-    return render_template("index.html")
+    return render_template("all_vehicles.html")
 
 
 @app.route('/view_vehicle', methods=['GET'])
@@ -109,11 +107,8 @@ def view_vehicle():
     db_connection.reconnect()
     cursor = db_connection.cursor()
     vin = session['vin']
-    cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin, ))
+    cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin,))
     row_of_car = cursor.fetchone()
-    print("vin of session: ", session, row_of_car)
-    print("##################")
-    print(row_of_car[0])
     info = {
         'vin': row_of_car[0],
         'invoice_price': row_of_car[1],
@@ -127,14 +122,47 @@ def view_vehicle():
     }
     return render_template("vehicle_details.html", params=info)
 
+"""
+Christie
+"""
+@app.route("/search_data",methods=["POST","GET"])
+def public_search():
+    if request.method == 'POST':
+        vin = request.form['vin']
+        vehicle_type = request.form['vehicle_type']
+        manufacturer = request.form['manufacturer']
+        model_year = request.form['model_year']
+        color = request.form['color']
+        list_price = request.form['list_price']
+        key_word = request.form['key_word']
+        print("[Search data]: search filters: ", vin, vehicle_type, manufacturer, model_year, color, list_price, key_word)
+        db_connection.reconnect()
+        cursor = db_connection.cursor()
+        cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin,))
+        matches = cursor.fetchall()
+        records = []
+        for m in matches:
+            info = {
+                'vin': m[0],
+                'invoice_price': m[1],
+                'manu_name': m[2],
+                'inbound_date': m[3],
+                'model_year': m[4],
+                'model_name': m[5],
+                'optional_description': m[6],
+                'vehicle_type': m[7],
+                'vehicle_type_id': m[8]
+            }
+            records.append(info)
+    return render_template("manager_filter_results.html", records=records)
 
-@app.route('/')
+
 @app.route('/home', methods=['GET'])
 @is_logged_in
 def index():
     role = session['role']
     if role == MANAGER:
-        return render_template("manager.html", params=role)
+        return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes)
     elif role == INVENTORY_CLERK:
         return render_template("clerk.html", params=role)
     elif role == SERVICE_WRITER:
@@ -142,4 +170,4 @@ def index():
     elif role == SALESPERSON:
         return render_template("salesperson.html", params=role)
     else:
-        return render_template('index.html', params=load_vehicles())
+        return render_template('all_vehicles.html', params=load_vehicles())

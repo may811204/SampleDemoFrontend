@@ -1,0 +1,69 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="container">
+      <h1>Filter results</h1>
+      <p class="lead">Sales Section</p>
+      <table class="table table-striped w-auto">
+          <thead>
+            <tr>
+              <th>VIN</th>
+              <th>InventoryClerk FirstName</th>
+              <th>InventoryClerk LastName</th>
+              <th>Inbound Date</th>
+              <th>Buyer FirstName</th>
+              <th>Buyer LastName</th>
+              <th>Title</th>
+              <th>Contact Name</th>
+              <th>Street Address</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Postal Code</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>List Price</th>
+              <th>Sold Price</th>
+              <th>Sales Date</th>
+              <th>Sales FirstName</th>
+              <th>Sales LastName</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="table-info">
+          {% for record in records %}
+              <td>{{record.vin}}</td>
+              <td>{{record.invoice_price}}</td>
+              <td>{{record.manu_name}}</td>
+            {% endfor%}
+          </tbody>
+        </table>
+      <p class="lead">Repair Section</p>
+      <table class="table table-striped w-auto">
+          <thead>
+            <tr>
+              <th>VIN</th>
+              <th>Customer FirstName</th>
+              <th>Customer LastName</th>
+              <th>Business Name</th>
+              <th>Repair Start Date</th>
+              <th>Repair Complete Date</th>
+              <th>Labor Charge</th>
+              <th>Total Costs</th>
+              <th>Service Writer First Name</th>
+              <th>Service Writer Last Name</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="table-info">
+          {% for record in records %}
+              <td>{{record.vin}}</td>
+              <td>{{record.invoice_price}}</td>
+              <td>{{record.manu_name}}</td>
+            {% endfor%}
+          </tbody>
+        </table>
+    <a href="{{ url_for('index') }}">Return to Home</a>
+  </div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
