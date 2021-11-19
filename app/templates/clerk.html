@@ -1,9 +1,10 @@
-{% extends "layout/reports.html" %}
-
-{% block content %}
-  <div class="container">
-    <div class="container-fluid">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Add new vehicles</button>
+{% extends "layout/login_base.html" %}
+{% block body %}
+      {% include "search_customer.html" %}
+  <div class='row mt-5'>
+    <div class='col-4 mx-auto'>
+      <h4 class='text-center'>Add Vehicle</h4><hr>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Add new vehicles</button>
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -46,6 +47,7 @@
   </div>
 
 {% endblock %}
+
 {% block footer %}
   {% include "include/footer.html" %}
 {% endblock %}

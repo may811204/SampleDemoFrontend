@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request, flash, ses
 import mysql.connector as mysql
 from functools import wraps
 from app.constants import Colors, Manufacturer, VehicleTypes
+from app.sql import FilterCustomer
 from app import app
 
 MANAGER = "Manager"
@@ -15,6 +16,9 @@ db_connection = mysql.connect(host='50.87.253.41', database='charljl4_jj', user=
 
 # https://github.com/ashishsarkar/UserLogin/blob/master/app.py
 # check if user logged in
+"""
+Christie
+"""
 def is_logged_in(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -25,7 +29,9 @@ def is_logged_in(f):
             return redirect(url_for('login'))
     return wrap
 
-
+"""
+Christie
+"""
 def load_vehicles():
     d = {}
     db_connection.reconnect()
@@ -42,7 +48,9 @@ def load_vehicles():
         d[i] = v
     return d
 
-
+"""
+Christie
+"""
 @app.route("/login", methods=["POST", "GET"])
 def login():
     db_connection.reconnect()
@@ -64,15 +72,18 @@ def login():
     else:
         return render_template("login.html")
 
-
+"""
+Christie
+"""
 # logout
 @app.route("/logout")
 def logout():
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
-
-
+"""
+Christie
+"""
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     status = False
@@ -97,11 +108,16 @@ def add_vehicle():
         invoice_price = request.form["invoice_price"]
         date_added = request.form["date_added"]
         session['vin'] = vin
-        flash('Registration Successfully. Login Here...', 'success')
-        return redirect('view_vehicle')
+        if session['role'] == MANAGER:
+            flash('Vehicle added', 'success')
+            return redirect('view_vehicle')
+        elif session['role'] == INVENTORY_CLERK:
+            flash('Vehicle {} Added Successfully!'.format(vin), 'success')
+            return redirect(request.referrer)
     return render_template("all_vehicles.html")
-
-
+"""
+Christie
+"""
 @app.route('/view_vehicle', methods=['GET'])
 def view_vehicle():
     db_connection.reconnect()
@@ -156,7 +172,36 @@ def public_search():
             records.append(info)
     return render_template("manager_filter_results.html", records=records)
 
+"""
+Christie
+"""
+@app.route("/search_customer",methods=["POST","GET"])
+def search_customer():
+    if request.method == 'POST':
+        driver_license = request.form['driver_license']
+        tax_id = request.form['tax_id']
+        cursor = db_connection.cursor()
+        cursor.execute(FilterCustomer, (driver_license, ))
+        customers = cursor.fetchall()
+        print("[Search Customer]: driver license: {}, tax_id: {}".format(driver_license, tax_id))
+        records = []
+        for customer in customers:
+            info = {
+                'customer_id': customer[0],
+                'street_address': customer[1],
+                'city': customer[2],
+                'state': customer[3],
+                'postal_code': customer[4],
+                'email': customer[5],
+                'phone': customer[6],
+                'is_individual': customer[7]
+            }
+            records.append(info)
+    return render_template("customer_filter_results.html", records=records)
 
+"""
+Christie
+"""
 @app.route('/home', methods=['GET'])
 @is_logged_in
 def index():
