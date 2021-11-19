@@ -1,0 +1,38 @@
+{% extends 'layout/login_base.html' %}
+{% block body %}
+<body>
+  <div class="container">
+    <div class="container-fluid">
+        <div class='row mt-5'>
+        <div class='col-4 mx-auto'>
+          <h4 class='text-center'>Add Business</h4><hr>
+          <form action="{{ url_for('add_business') }}" method="post">
+            <div class='form-group'>
+              <label>Tax ID</label>
+              <input type='text' name='tax_id' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Customer ID</label>
+             <input type='text' name='customer_id' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Business Name</label>
+              <input type='text' name='business_name' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Title</label>
+              <input type='text' name='title' required class='form-control'>
+            </div>
+            <div class='form-group'>
+              <label>Contact Name</label>
+              <input type='text' name='contact_name' required class='form-control'>
+            </div>
+            <input type='submit' name='submit' value='Submit' class='btn btn-success'>
+          </form>
+          <a href="{{ url_for('index') }}">Return to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

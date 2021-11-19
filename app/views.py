@@ -12,13 +12,16 @@ SERVICE_WRITER = "ServiceWriter"
 ANONYMOUS = "anonymous"
 ROLAND_AROUND = "Owner"
 
-db_connection = mysql.connect(host='50.87.253.41', database='charljl4_jj', user='charljl4_team007', password='team007',port=3306)
+db_connection = mysql.connect(host='50.87.253.41', database='charljl4_jj', user='charljl4_team007', password='team007',
+                              port=3306)
 
 # https://github.com/ashishsarkar/UserLogin/blob/master/app.py
 # check if user logged in
 """
 Christie
 """
+
+
 def is_logged_in(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -27,11 +30,15 @@ def is_logged_in(f):
         else:
             flash('Unauthorized, Please Login with correct credential', 'danger')
             return redirect(url_for('login'))
+
     return wrap
+
 
 """
 Christie
 """
+
+
 def load_vehicles():
     d = {}
     db_connection.reconnect()
@@ -48,9 +55,12 @@ def load_vehicles():
         d[i] = v
     return d
 
+
 """
 Christie
 """
+
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
     db_connection.reconnect()
@@ -72,18 +82,25 @@ def login():
     else:
         return render_template("login.html")
 
+
 """
 Christie
 """
+
+
 # logout
 @app.route("/logout")
 def logout():
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
+
+
 """
 Christie
 """
+
+
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     status = False
@@ -100,6 +117,10 @@ def register():
     return render_template("register.html", status=status)
 
 
+"""
+Christie
+"""
+
 @app.route('/add_vehicle', methods=['POST'])
 def add_vehicle():
     if request.method == 'POST':
@@ -115,9 +136,57 @@ def add_vehicle():
             flash('Vehicle {} Added Successfully!'.format(vin), 'success')
             return redirect(request.referrer)
     return render_template("all_vehicles.html")
+
+
 """
 Christie
 """
+
+
+@app.route('/add_customer', methods=['POST', 'GET'])
+def add_customer():
+    if request.method == 'POST':
+        print(request.form)
+        street_address = request.form["street_address"]
+        is_individual = request.form['is_individual']
+        if is_individual == "0":
+            return redirect('add_individual')
+        else:
+            return redirect('add_business')
+    return render_template('register_customer.html')
+
+
+"""
+Christie
+"""
+
+
+@app.route('/add_individual', methods=['POST', 'GET'])
+def add_individual():
+    if request.method == 'POST':
+        print(request.form)
+        flash('Individual added', 'success')
+    return render_template('register_individual.html')
+
+
+"""
+Christie
+"""
+
+
+@app.route('/add_business', methods=['POST', 'GET'])
+def add_business():
+    if request.method == 'POST':
+        print(request.form)
+        flash('Business added', 'success')
+    return render_template('register_business.html')
+
+
+"""
+Christie
+"""
+
+
 @app.route('/view_vehicle', methods=['GET'])
 def view_vehicle():
     db_connection.reconnect()
@@ -138,10 +207,13 @@ def view_vehicle():
     }
     return render_template("vehicle_details.html", params=info)
 
+
 """
 Christie
 """
-@app.route("/search_data",methods=["POST","GET"])
+
+
+@app.route("/search_data", methods=["POST", "GET"])
 def public_search():
     if request.method == 'POST':
         vin = request.form['vin']
@@ -151,7 +223,8 @@ def public_search():
         color = request.form['color']
         list_price = request.form['list_price']
         key_word = request.form['key_word']
-        print("[Search data]: search filters: ", vin, vehicle_type, manufacturer, model_year, color, list_price, key_word)
+        print("[Search data]: search filters: ", vin, vehicle_type, manufacturer, model_year, color, list_price,
+              key_word)
         db_connection.reconnect()
         cursor = db_connection.cursor()
         cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin,))
@@ -172,16 +245,20 @@ def public_search():
             records.append(info)
     return render_template("manager_filter_results.html", records=records)
 
+
 """
 Christie
 """
-@app.route("/search_customer",methods=["POST","GET"])
+
+
+@app.route("/search_customer", methods=["POST", "GET"])
 def search_customer():
+    db_connection.reconnect()
     if request.method == 'POST':
         driver_license = request.form['driver_license']
         tax_id = request.form['tax_id']
         cursor = db_connection.cursor()
-        cursor.execute(FilterCustomer, (driver_license, ))
+        cursor.execute(FilterCustomer, (driver_license,))
         customers = cursor.fetchall()
         print("[Search Customer]: driver license: {}, tax_id: {}".format(driver_license, tax_id))
         records = []
@@ -199,9 +276,12 @@ def search_customer():
             records.append(info)
     return render_template("customer_filter_results.html", records=records)
 
+
 """
 Christie
 """
+
+
 @app.route('/home', methods=['GET'])
 @is_logged_in
 def index():
