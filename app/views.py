@@ -113,6 +113,60 @@ def part_stats_reports():
     part_stats = cursor.fetchall()
     return render_template('reports/part_stats.html', records=part_stats)
 
+"""
+Christie
+"""
+@app.route("/below_cost", methods=["GET"])
+def below_cost_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(DummySQL)
+    below_cost = cursor.fetchall()
+    return render_template('reports/below_cost.html', records=below_cost)
+
+"""
+Christie
+"""
+@app.route("/gross_income", methods=["GET"])
+def gross_income_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(DummySQL)
+    gross_income = cursor.fetchall()
+    return render_template('reports/gross_income.html', records=gross_income)
+
+"""
+Christie
+"""
+@app.route("/monthly_sale", methods=["GET"])
+def monthly_sale_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(DummySQL)
+    monthly_sale = cursor.fetchall()
+    return render_template('reports/monthly_sale.html', records=monthly_sale)
+
+"""
+Christie
+"""
+@app.route("/repair_reports", methods=["GET"])
+def repair_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(DummySQL)
+    repair_reports = cursor.fetchall()
+    return render_template('reports/repair_reports.html', records=repair_reports)
+
+"""
+Christie
+"""
+@app.route("/avg_inventory", methods=["GET"])
+def avg_inventory_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(DummySQL)
+    avg_inventory = cursor.fetchall()
+    return render_template('reports/avg_inventory.html', records=avg_inventory)
 
 """
 Christie
@@ -131,7 +185,6 @@ def sales_by_color_reports():
 """
 Christie
 """
-
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -359,7 +412,8 @@ Christie
 def index():
     role = session['role']
     if role == MANAGER:
-        return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes)
+        available_car_amount = 0
+        return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes, available_car_amount=available_car_amount)
     elif role == INVENTORY_CLERK:
         return render_template("clerk.html", params=role)
     elif role == SERVICE_WRITER:

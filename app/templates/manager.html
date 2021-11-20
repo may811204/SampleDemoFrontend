@@ -1,9 +1,29 @@
 {% extends "layout/login_base.html" %}
 {% block body %}
+<input value='⭐ Important Information' class='btn btn-danger'>
+<p class="text-primary">Total <strong>{{ available_car_amount }}</strong> Vehicles Available for Purchase.</p>
+<div class="row">
+  <div class="column">
       {% include "reports.html" %}
+  </div>
+  <div class="column">
       {% include "search_bar.html" %}
-{% endblock %}
+  </div>
+</div>
+<style>
+.column {
+  float: left;
+  width: 50%;
+}
 
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+{% endblock %}
 {% block footer %}
   {% include "include/footer.html" %}
 {% endblock %}

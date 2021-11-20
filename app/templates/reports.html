@@ -5,45 +5,45 @@
         <div class='row mt-5'>
         <div class='col-12 mx-auto'>
           <h4 class='text-center'>Reports</h4><hr>
-            <form action="{{url_for('add_vehicle')}}" method='post'>
+            <form>
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label>Sales by Color</label>
                     <a href="{{ url_for('sales_by_color_reports') }}">View Report</a>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="below_cost_sales">Below Cost Sales</label>
+                    <label>Below Cost Sales</label>
                     <a href="{{ url_for('sales_by_manufacturer_reports') }}">View Report</a>
                   </div>
                 </div>
                 <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="sales_by_type">Sales by Type</label>
+                    <label">Sales by Type</label>
                     <a href="{{ url_for('sales_by_type_reports') }}">View Report</a>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="avg_time_in_inventory">Average Time In Inventory</label>
-                    <a href="{{ url_for('sales_by_type_reports') }}">View Report</a>
+                    <label>Average Time In Inventory</label>
+                    <a href="{{ url_for('avg_inventory_reports') }}">View Report</a>
                   </div>
                 <div class="form-group col-md-6">
-                    <label for="sales_by_type">Sales by Manufacturer</label>
+                    <label>Sales by Manufacturer</label>
                     <a href="{{ url_for('sales_by_manufacturer_reports') }}">View Report</a>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="avg_time_in_inventory">Part Statistics</label>
+                    <label>Part Statistics</label>
                     <a href="{{ url_for('part_stats_reports') }}">View Report</a>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="sales_by_type">Gross Customer Income</label>
+                    <label>Gross Customer Income</label>
                     <a href="{{ url_for('sales_by_manufacturer_reports') }}">View Report</a>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="avg_time_in_inventory">Monthly Sales</label>
-                    <a href="{{ url_for('sales_by_manufacturer_reports') }}">View Report</a>
+                    <label>Monthly Sales</label>
+                    <a href="{{ url_for('monthly_sale_reports') }}">View Report</a>
                   </div>
                   <div class="form-group col-md-8">
-                    <label for="sales_by_type">Repairs By Manufacturer, Type, Model</label>
-                    <a href="{{ url_for('sales_by_manufacturer_reports') }}">View Report</a>
+                    <label>Repairs By Manufacturer, Type, Model</label>
+                    <a href="{{ url_for('repair_reports') }}">View Report</a>
                   </div>
                 </div>
             </form>

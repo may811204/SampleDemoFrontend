@@ -1,3 +1,4 @@
+DummySQL = "SELECT * FROM Car"
 FilterCustomer = "SELECT * FROM Customer where customerID=%s"
 SalesByManufacturer = """
 SELECT allManu.manu_name, COALESCE(`30days`, '0') as '30days', COALESCE(`365days`, '0') as '365days', COALESCE(`allTime`, '0') as 'allTime' FROM Manufacturer AS allManu
