@@ -2,7 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request, flash, ses
 import mysql.connector as mysql
 from functools import wraps
 from app.constants import Colors, Manufacturer, VehicleTypes
-from app.sql import FilterCustomer
+from app.sql import *
 from app import app
 
 MANAGER = "Manager"
@@ -54,6 +54,78 @@ def load_vehicles():
         }
         d[i] = v
     return d
+
+"""
+Christie
+"""
+def load_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(SalesByManufacturer)
+    sales_by_manufacturer = cursor.fetchall()
+    cursor.execute(SalesByType)
+    sales_by_type = cursor.fetchall()
+    cursor.execute(SalesByColor)
+    sales_by_color = cursor.fetchall()
+    cursor.execute(PartStatistics)
+    part_statistics = cursor.fetchall()
+    data = {
+        'sales_by_manufacturer' : sales_by_manufacturer,
+        'sales_by_type' : sales_by_type,
+        'sales_by_color' : sales_by_color,
+        'part_statistics' : part_statistics
+    }
+    return data
+
+"""
+Christie
+"""
+@app.route("/sales_by_manufacturer", methods=["GET"])
+def sales_by_manufacturer_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(SalesByManufacturer)
+    sales_by_manufacturer = cursor.fetchall()
+    return render_template('reports/sales_by_manufacturer.html', records=sales_by_manufacturer)
+
+"""
+Christie
+"""
+
+@app.route("/sales_by_type", methods=["GET"])
+def sales_by_type_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(SalesByType)
+    sales_by_type = cursor.fetchall()
+    return render_template('reports/sales_by_type.html', records=sales_by_type)
+
+
+"""
+Christie
+"""
+
+@app.route("/part_stats", methods=["GET"])
+def part_stats_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(PartStatistics)
+    part_stats = cursor.fetchall()
+    return render_template('reports/part_stats.html', records=part_stats)
+
+
+"""
+Christie
+"""
+
+@app.route("/sales_by_color", methods=["GET"])
+def sales_by_color_reports():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(SalesByColor)
+    sales_by_color = cursor.fetchall()
+    return render_template('reports/sales_by_color.html', records=sales_by_color)
+
 
 
 """

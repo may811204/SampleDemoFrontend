@@ -1,0 +1,30 @@
+{% extends "layout/login_base.html" %}
+{% block body %}
+    <h4 class='text-center'>Sales By Manufacturer</h4><hr>
+      <table class="table table-striped w-auto">
+          <thead>
+            <tr>
+              <th>Manufacturer Name</th>
+              <th>-</th>
+              <th>-</th>
+              <th>-</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          {% for record in records %}
+          <tr>
+              <td>{{record[0]}}</td>
+              <td>{{record[1]}}</td>
+              <td>{{record[2]}}</td>
+              <td>{{record[3]}}</td>
+          </tr>
+            {% endfor%}
+          </tbody>
+    </table>
+    <hr>
+     <a href="{{ url_for('index') }}">Return to Home</a>
+{% endblock %}
+{% block footer %}
+  {% include "include/footer.html" %}
+{% endblock %}
