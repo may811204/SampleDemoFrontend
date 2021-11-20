@@ -34,6 +34,11 @@ def is_logged_in(f):
     return wrap
 
 
+def roland_login_as_other(session, r):
+    cur_role = session['role']
+    next_role = session.get('switch_to_role', None)
+    return cur_role == ROLAND_AROUND and next_role and next_role == r
+
 """
 Christie
 """
@@ -216,8 +221,12 @@ Christie
 # logout
 @app.route("/logout")
 def logout():
-    session.clear()
-    flash('You are now logged out', 'success')
+    if 'switch_to_role' in session:
+        session.pop('switch_to_role')
+        return redirect('home')
+    else:
+        session.clear()
+        flash('You are now logged out', 'success')
     return redirect(url_for('login'))
 
 
@@ -402,6 +411,15 @@ def search_customer():
     return render_template("customer_filter_results.html", records=records)
 
 
+
+@app.route("/switch_role", methods=["POST"])
+def switch_role():
+    session['switch_to_role'] = request.form['switch']
+    print(session)
+    return redirect(request.referrer)
+
+
+
 """
 Christie
 """
@@ -411,14 +429,16 @@ Christie
 @is_logged_in
 def index():
     role = session['role']
-    if role == MANAGER:
+    s = roland_login_as_other(session, MANAGER)
+    print("roland_login_as_other: ", s)
+    if role == MANAGER or roland_login_as_other(session, MANAGER):
         available_car_amount = 0
         return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes, available_car_amount=available_car_amount)
-    elif role == INVENTORY_CLERK:
+    elif role == INVENTORY_CLERK or roland_login_as_other(session, INVENTORY_CLERK):
         return render_template("clerk.html", params=role)
-    elif role == SERVICE_WRITER:
+    elif role == SERVICE_WRITER or roland_login_as_other(session, SERVICE_WRITER):
         return render_template("writer.html", params=role)
-    elif role == SALESPERSON:
+    elif role == SALESPERSON or roland_login_as_other(session, SALESPERSON):
         return render_template("salesperson.html", params=role)
-    else:
-        return render_template('all_vehicles.html', params=load_vehicles())
+    elif role == ROLAND_AROUND:
+        return render_template('roland.html', colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes)
