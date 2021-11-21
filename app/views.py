@@ -39,6 +39,14 @@ def roland_login_as_other(session, r):
     next_role = session.get('switch_to_role', None)
     return cur_role == ROLAND_AROUND and next_role and next_role == r
 
+
+def calculate_available_vehicles():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(AvailableVehicles)
+    available_vehicles = cursor.fetchone()
+    return available_vehicles[0]
+
 """
 Christie
 """
@@ -259,18 +267,23 @@ Christie
 def add_vehicle():
     if request.method == 'POST':
         vin = request.form["vin"]
-        car_type = request.form["car_type"]
         invoice_price = request.form["invoice_price"]
-        date_added = request.form["date_added"]
+        manu_name = request.form["manu_name"]
+        inbound_date = request.form["inbound_date"]
+        model_year = request.form["model_year"]
+        model_name = request.form["model_name"]
+        optional_description = request.form["optional_description"]
+        vehicleTypeID = request.form["vehicleTypeID"]
+        vehicleInputterID = request.form["vehicleInputterID"]
         session['vin'] = vin
-        if session['role'] == MANAGER:
-            flash('Vehicle added', 'success')
-            return redirect('view_vehicle')
-        elif session['role'] == INVENTORY_CLERK:
-            flash('Vehicle {} Added Successfully!'.format(vin), 'success')
-            return redirect(request.referrer)
-    return render_template("all_vehicles.html")
-
+        cur = db_connection.cursor()
+        cur.execute("insert into Vehicle(VIN, invoice_price, manu_name, inbound_date, model_year, model_name, optional_description, vehicleTypeID, vehicleInputterID)\
+        values(%s,%s,%s,%s,%s,%s,%s,%s,%s)", (vin, invoice_price, manu_name, inbound_date, model_year, model_name, optional_description, vehicleTypeID, vehicleInputterID))
+        db_connection.commit()
+        cur.close()
+        flash('Registration Successfully. Login Here...', 'success')
+        return redirect('view_vehicle')
+    return render_template("vehicle.html")
 
 """
 Christie
@@ -432,7 +445,7 @@ def index():
     s = roland_login_as_other(session, MANAGER)
     print("roland_login_as_other: ", s)
     if role == MANAGER or roland_login_as_other(session, MANAGER):
-        available_car_amount = 0
+        available_car_amount = calculate_available_vehicles()
         return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes, available_car_amount=available_car_amount)
     elif role == INVENTORY_CLERK or roland_login_as_other(session, INVENTORY_CLERK):
         return render_template("clerk.html", params=role)

@@ -130,3 +130,8 @@ Group By VINCateColor.CategorizedColor) AS allTimeform
 ON allTimeform.CategorizedColor = allColor.CategorizedColor
 ORDER BY allColor.CategorizedColor ASC
 """
+AvailableVehicles = """
+SELECT COUNT(DISTINCT VIN) 
+FROM Vehicle
+WHERE VIN NOT IN (SELECT VIN FROM Purchase)
+"""
