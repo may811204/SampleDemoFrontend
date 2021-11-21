@@ -1,26 +1,22 @@
 {% extends "layout/login_base.html" %}
 {% block body %}
-    <h4 class='text-center'>Average Inventory Time</h4><hr>
+    <h4 class='text-center'>Drilldown Reports</h4><hr>
       <table class="table table-striped w-auto">
           <thead>
             <tr>
-              <th>YYYYMM</th>
-              <th>Total Number</th>
-              <th>Total Sales Income</th>
-              <th>Net Income</th>
-              <th>Ratio</th>
-              <th>Display Color</th>
+              <th>VIN</th>
+              <th>username</th>
+              <th>totalDollar</th>
+              <th>totalCar</th>
             </tr>
           </thead>
           <tbody>
           {% for record in records %}
           <tr>
-              <td><a href="{{ url_for('monthly_drilldown_reports', yyyymm = record[0] ) }}">{{record[0]}}</a></td>
+              <td>{{record[0]}}</td>
               <td>{{record[1]}}</td>
               <td>{{record[2]}}</td>
               <td>{{record[3]}}</td>
-              <td>{{record[4]}}</td>
-              <td>{{record[5]}}</td>
           </tr>
             {% endfor%}
           </tbody>

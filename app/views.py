@@ -71,24 +71,15 @@ def load_vehicles():
 """
 Christie
 """
-def load_reports():
+@app.route("/monthly_drilldown/<yyyymm>", methods=["GET"])
+def monthly_drilldown_reports(yyyymm):
+    year, month = yyyymm.split("-")[0], yyyymm.split("-")[1]
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(SalesByManufacturer)
-    sales_by_manufacturer = cursor.fetchall()
-    cursor.execute(SalesByType)
-    sales_by_type = cursor.fetchall()
-    cursor.execute(SalesByColor)
-    sales_by_color = cursor.fetchall()
-    cursor.execute(PartStatistics)
-    part_statistics = cursor.fetchall()
-    data = {
-        'sales_by_manufacturer' : sales_by_manufacturer,
-        'sales_by_type' : sales_by_type,
-        'sales_by_color' : sales_by_color,
-        'part_statistics' : part_statistics
-    }
-    return data
+    cursor.execute(DrilldownReport, (year, month))
+    detail_records = cursor.fetchall()
+    return render_template('reports/drilldown_reports.html', records=detail_records)
+
 
 """
 Christie
@@ -133,7 +124,7 @@ Christie
 def below_cost_reports():
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(DummySQL)
+    cursor.execute(BelowCost)
     below_cost = cursor.fetchall()
     return render_template('reports/below_cost.html', records=below_cost)
 
@@ -144,7 +135,7 @@ Christie
 def gross_income_reports():
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(DummySQL)
+    cursor.execute(GrossIncome)
     gross_income = cursor.fetchall()
     return render_template('reports/gross_income.html', records=gross_income)
 
@@ -155,7 +146,7 @@ Christie
 def monthly_sale_reports():
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(DummySQL)
+    cursor.execute(MonthlySale)
     monthly_sale = cursor.fetchall()
     return render_template('reports/monthly_sale.html', records=monthly_sale)
 
@@ -166,9 +157,9 @@ Christie
 def repair_reports():
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(DummySQL)
-    repair_reports = cursor.fetchall()
-    return render_template('reports/repair_reports.html', records=repair_reports)
+    cursor.execute(RepairReport)
+    repair_reports_by_mtm = cursor.fetchall()
+    return render_template('reports/repair_reports.html', records=repair_reports_by_mtm)
 
 """
 Christie
@@ -177,7 +168,7 @@ Christie
 def avg_inventory_reports():
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(DummySQL)
+    cursor.execute(AverageInventoryTime)
     avg_inventory = cursor.fetchall()
     return render_template('reports/avg_inventory.html', records=avg_inventory)
 
