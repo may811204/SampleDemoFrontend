@@ -189,80 +189,71 @@ ORDER  BY purchase_date DESC,
           ratio DESC
 """
 
+#TODO: replace customer name
 GrossIncome = """
-create view customer_names AS
-SELECT customerID, concat(ind_first_name,' ', ind_last_name) as customer_name FROM Individual
-UNION ALL
-SELECT customerID, business_name as customer_name FROM Business;
-create view customer_sales AS (
-SELECT customerID, count(sold_price) AS sales_count, sum(sold_price) AS total_sales, MIN(purchase_date) AS first_sale, MAX(purchase_date) AS last_sale
-FROM Purchase 
-GROUP BY customerID);
-create view customer_repairs AS (
-SELECT d.customerID, d.repair_count, d.labor_sum, d.first_repair, d.last_repair, e. total_part, (d.labor_sum+e.total_part) AS total_repair
+SELECT 
+    a.customer_name, b.*
 FROM
-	(SELECT customerID, count(labor_charge) AS repair_count, sum(labor_charge) AS labor_sum, MIN(start_date) AS first_repair, MAX(start_date) AS last_repair
-	FROM Repair
-	GROUP BY customerID) AS d
-LEFT JOIN
-	(SELECT customerID, sum(part_amount) AS total_part
-	FROM 
-	(SELECT a.VIN, a.customerID, a.start_date, b.part_number, (b.used_part_quantity * c.price)  AS part_amount
-	FROM Repair as a
-	LEFT JOIN Uses as b
-	ON a.VIN=b.VIN and a.customerID=b.customerID and a.start_date=b.start_date
-	LEFT JOIN Part AS c
-	ON b.part_number=c.part_number) AS f
+    customer_names AS a
+        LEFT JOIN
+    (SELECT 
+        a.customerID,
+            a.purchase_date,
+            a.sold_price,
+            a.VIN,
+            b.model_year,
+            b.manu_name,
+            b.model_name,
+            c.username AS salesname
+    FROM
+        Purchase AS a
+    LEFT JOIN Vehicle AS b ON a.VIN = b.VIN
+    LEFT JOIN Salesperson AS c ON a.SalesInputterID = c.SalesInputterID) AS b ON a.customerID = b.customerID
+WHERE
+    a.customer_name = 'Dennis Conley'
+ORDER BY b.purchase_date DESC , VIN ASC;
+"""
 
-	GROUP BY customerID) AS e
-ON d.customerID=e.customerID
-);
-create view top15 AS (
-SELECT a.customer_name, b.first_sale, b.last_sale, c.first_repair, c.last_repair, b.sales_count, c.repair_count, (b.total_sales+c.total_repair) as gross_income
-FROM customer_names AS a
-LEFT JOIN customer_sales AS b
-ON a.customerID=b.customerID
-LEFT JOIN customer_repairs AS c
-ON a.customerID=c.customerID
-ORDER BY gross_income DESC, last_sale DESC, last_repair DESC
-LIMIT 15);
-SELECT a.customer_name, b.*
-FROM customer_names AS a
-LEFT JOIN 
-	(SELECT a.customerID, a.purchase_date, a.sold_price, a.VIN, b.model_year, b.manu_name, b.model_name, c.username AS salesname
-	FROM Purchase AS a
-	LEFT JOIN Vehicle AS b
-	ON a.VIN=b.VIN
-	LEFT JOIN Salesperson AS c
-	ON a.SalesInputterID=c.SalesInputterID) AS b 
-ON a.customerID=b.customerID
-WHERE  a.customer_name='Dennis Conley'
-ORDER BY b.purchase_date DESC, VIN ASC ;
-SELECT a.customer_name, b.*
-FROM customer_names AS a
-LEFT JOIN 
-	(
-	SELECT a.customerID, a.start_date, a.complete_date, a.VIN, a.odometer, a.labor_charge, c.one_total_part, (a.labor_charge+c.one_total_part) as one_total_cost, b.username AS service_writer
-	FROM Repair AS a
-	LEFT JOIN ServiceWriter AS b
-	ON a.RecordInputterID=b.RecordInputterID
-
-	LEFT JOIN
-
-		(SELECT VIN, customerID, start_date, SUM(part_amount) AS  one_total_part
-		FROM 
-			(SELECT a.VIN, a.customerID, a.start_date, (a.used_part_quantity*b.price) AS part_amount
-			FROM Uses AS a
-			LEFT JOIN Part AS b
-			ON a.part_number=b.part_number) AS e
-		GROUP BY VIN, customerID, start_date) AS c
-
-	ON a.VIN=c.VIN AND a.customerID=c.customerID AND a.start_date=c.start_date
-	) AS b
-
-ON a.customerID=b.customerID
-WHERE  customer_name='Dennis Conley'
-ORDER BY start_date DESC,  complete_date IS NULL DESC, complete_date DESC, VIN ASC;
+#TODO: replace customer name
+GrossIncomeBy = """
+SELECT 
+    a.customer_name, b.*
+FROM
+    customer_names AS a
+        LEFT JOIN
+    (SELECT 
+        a.customerID,
+            a.start_date,
+            a.complete_date,
+            a.VIN,
+            a.odometer,
+            a.labor_charge,
+            c.one_total_part,
+            (a.labor_charge + c.one_total_part) AS one_total_cost,
+            b.username AS service_writer
+    FROM
+        Repair AS a
+    LEFT JOIN ServiceWriter AS b ON a.RecordInputterID = b.RecordInputterID
+    LEFT JOIN (SELECT 
+        VIN,
+            customerID,
+            start_date,
+            SUM(part_amount) AS one_total_part
+    FROM
+        (SELECT 
+        a.VIN,
+            a.customerID,
+            a.start_date,
+            (a.used_part_quantity * b.price) AS part_amount
+    FROM
+        Uses AS a
+    LEFT JOIN Part AS b ON a.part_number = b.part_number) AS e
+    GROUP BY VIN , customerID , start_date) AS c ON a.VIN = c.VIN
+        AND a.customerID = c.customerID
+        AND a.start_date = c.start_date) AS b ON a.customerID = b.customerID
+WHERE
+    customer_name = 'Dennis Conley'
+ORDER BY start_date DESC , complete_date IS NULL DESC , complete_date DESC , VIN ASC;
 """
 
 MonthlySale = """
@@ -283,69 +274,49 @@ GROUP BY YEAR(p.purchase_date), MONTH(p.purchase_date)
 ORDER BY YEAR(p.purchase_date), MONTH(p.purchase_date) DESC;
 """
 
-RepairReport = """
-create view total_VIN_manu AS (
-SELECT a.VIN, a.repair_count, a. total_labor_VIN, b. total_part_amount_VIN, (a. total_labor_VIN+b. total_part_amount_VIN) AS total_VIN, c.manu_name, c.vehicleTypeID, c.model_name
-
+RepairByManufacturer = """
+SELECT 
+    SUM(repair_count) AS repair_type,
+    SUM(total_labor_VIN) AS labor_type,
+    SUM(total_part_amount_VIN) AS part_type,
+    SUM(total_labor_VIN + total_part_amount_VIN) AS total_type,
+    a.manu_name,
+    c.type_name
 FROM
-	(SELECT VIN, count(labor_charge) as repair_count, sum(labor_charge) as total_labor_VIN
-	FROM Repair
-	GROUP BY VIN) AS a
-
-LEFT JOIN
-	(SELECT VIN, sum(part_amount) AS total_part_amount_VIN
-
-	FROM 
-
-		(SELECT a.VIN, a.customerID, a.start_date, b.part_number, (b.used_part_quantity * c.price) AS part_amount
-		FROM Repair as a
-		LEFT JOIN Uses as b
-		ON a.VIN=b.VIN and a.customerID=b.customerID and a.start_date=b.start_date
-		LEFT JOIN Part AS c
-		ON b.part_number=c.part_number) AS e
-
-	GROUP BY VIN) AS b
-ON a.VIN=b.VIN
-
-LEFT JOIN Vehicle AS c
-
-ON a.VIN=c.VIN
-);
-create view repair_manu AS (
-
-SELECT a.manu_name, b.repair_manu, b.part_manu, b.labor_manu, b. total_manu
-
-FROM Manufacturer AS a
-
-LEFT JOIN
-
-	(SELECT manu_name, sum(repair_count) as repair_manu, sum(total_labor_VIN) as labor_manu, sum(total_part_amount_VIN) as part_manu, sum(total_VIN) as total_manu
-	FROM total_VIN_manu
-	GROUP BY manu_name
-	) AS b
-
-ON a.manu_name=b.manu_name
-
-ORDER BY a.manu_name ASC);
-SELECT sum(repair_count) as repair_type, sum(total_labor_VIN) as labor_type, sum(total_part_amount_VIN) as part_type, sum(total_labor_VIN+total_part_amount_VIN) AS total_type, a.manu_name, c.type_name
-FROM total_VIN_manu AS a
-LEFT JOIN Vehicle AS b
-ON a.VIN=b.VIN
-LEFT JOIN VehicleType AS c
-ON b.vehicleTypeID=c.vehicleTypeID
-WHERE a.manu_name='$manu_name'
-GROUP BY a.manu_name, b.vehicleTypeID
+    total_VIN_manu AS a
+        LEFT JOIN
+    Vehicle AS b ON a.VIN = b.VIN
+        LEFT JOIN
+    VehicleType AS c ON b.vehicleTypeID = c.vehicleTypeID
+WHERE
+    a.manu_name='%s'
+GROUP BY a.manu_name,b.vehicleTypeID
 ORDER BY repair_type;
-SELECT sum(repair_count) as repair_model, sum(total_labor_VIN) as labor_model, sum(total_part_amount_VIN) as part_model, sum(total_labor_VIN+total_part_amount_VIN) AS total_model, a.manu_name, c.type_name, a.model_name
-FROM total_VIN_manu AS a
-LEFT JOIN Vehicle AS b
-ON a.VIN=b.VIN
-LEFT JOIN VehicleType AS c
-ON b.vehicleTypeID=c.vehicleTypeID
-WHERE c.type_name='$type_name'
-GROUP BY a.manu_name, b.vehicleTypeID, a.model_name
+"""
+
+
+RepairByType = """
+SELECT 
+    SUM(repair_count) AS repair_model,
+    SUM(total_labor_VIN) AS labor_model,
+    SUM(total_part_amount_VIN) AS part_model,
+    SUM(total_labor_VIN + total_part_amount_VIN) AS total_model,
+    a.manu_name,
+    c.type_name,
+    a.model_name
+FROM
+    total_VIN_manu AS a
+        LEFT JOIN
+    Vehicle AS b ON a.VIN = b.VIN
+        LEFT JOIN
+    VehicleType AS c ON b.vehicleTypeID = c.vehicleTypeID
+WHERE
+    c.type_name='%s'
+GROUP BY a.manu_name , b.vehicleTypeID , a.model_name
 ORDER BY repair_model;
 """
+
+
 DrilldownReport = """
 SELECT p.VIN, s.username, SUM(p.sold_price) AS totalDollar, COUNT(*) AS totalCar
 FROM Purchase AS p

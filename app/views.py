@@ -131,6 +131,7 @@ def below_cost_reports():
 """
 Christie
 """
+# TODO: add two queries together
 @app.route("/gross_income", methods=["GET"])
 def gross_income_reports():
     db_connection.reconnect()
@@ -157,9 +158,11 @@ Christie
 def repair_reports():
     db_connection.reconnect()
     cursor = db_connection.cursor()
-    cursor.execute(RepairReport)
-    repair_reports_by_mtm = cursor.fetchall()
-    return render_template('reports/repair_reports.html', records=repair_reports_by_mtm)
+    cursor.execute(RepairByType, ('SUV'))
+    repair_by_type = cursor.fetchall()
+    cursor.execute(RepairByManufacturer, ('Honda'))
+    repair_by_manufacturer = cursor.fetchall()
+    return render_template('reports/repair_reports.html', records=repair_by_manufacturer)
 
 """
 Christie
