@@ -73,6 +73,7 @@ Christie
 """
 @app.route("/monthly_drilldown/<yyyymm>", methods=["GET"])
 def monthly_drilldown_reports(yyyymm):
+    # FirstName-LastName-TaxID
     year, month = yyyymm.split("-")[0], yyyymm.split("-")[1]
     db_connection.reconnect()
     cursor = db_connection.cursor()
@@ -289,12 +290,24 @@ def add_customer():
     if request.method == 'POST':
         print(request.form)
         street_address = request.form["street_address"]
+        city = request.form["city"]
+        state = request.form["state"]
+        postal_code = request.form["postal_code"]
+        email_address = request.form["email_address"]
+        phone_number = request.form["phone_number"]
         is_individual = request.form['is_individual']
-        if is_individual == "0":
+        cur = db_connection.cursor()
+        cur.execute("INSERT INTO Customer(street_address, city, state, postal_code, email_address, phone_number, is_individual)\
+        values(%s,%s,%s,%s,%s,%s,%s)", (street_address, city, state, postal_code, email_address, phone_number, is_individual))
+        db_connection.commit()
+        cur.close()
+        flash('Registration Successfully.', 'success')
+        if is_individual == "1":
             return redirect('add_individual')
         else:
             return redirect('add_business')
     return render_template('register_customer.html')
+
 
 
 """
@@ -305,8 +318,17 @@ Christie
 @app.route('/add_individual', methods=['POST', 'GET'])
 def add_individual():
     if request.method == 'POST':
-        print(request.form)
-        flash('Individual added', 'success')
+        db_connection.reconnect()
+        cur = db_connection.cursor()
+        driver_license = request.form["driver_license"]
+        ind_first_name = request.form['ind_first_name']
+        ind_last_name = request.form['ind_last_name']
+        cur.execute("SELECT COUNT(*) FROM Customer")
+        customer_count = cur.fetchone()
+        cur.execute(InsertIndividual, (driver_license, str(customer_count[0]), ind_first_name, ind_last_name))
+        db_connection.commit()
+        cur.close()
+        flash('Individual {} {} has been added successfully'.format(ind_first_name, ind_last_name), 'success')
     return render_template('register_individual.html')
 
 
@@ -318,8 +340,18 @@ Christie
 @app.route('/add_business', methods=['POST', 'GET'])
 def add_business():
     if request.method == 'POST':
-        print(request.form)
-        flash('Business added', 'success')
+        db_connection.reconnect()
+        cur = db_connection.cursor()
+        tax_id = request.form['tax_id']
+        business_name = request.form['business_name']
+        title = request.form['title']
+        contact_name = request.form['contact_name']
+        cur.execute("SELECT COUNT(*) FROM Customer")
+        customer_count = cur.fetchone()
+        cur.execute(InsertBusiness, (tax_id, str(customer_count[0]), business_name, title, contact_name))
+        db_connection.commit()
+        cur.close()
+        flash('Business {} {} has been added successfully'.format(business_name, title), 'success')
     return render_template('register_business.html')
 
 

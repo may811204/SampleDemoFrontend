@@ -66,7 +66,6 @@ FROM Part
 GROUP BY vendor_name
 ORDER BY dollorAmountPerVendor DESC"""
 
-
 SalesByColor = """
 SELECT allColor.CategorizedColor, COALESCE(`30days`, '0') as '30days', COALESCE(`365days`, '0') as '365days', COALESCE(`allTime`, '0') as 'allTime' FROM 
 (SELECT DISTINCT(CategorizedColor)
@@ -189,7 +188,7 @@ ORDER  BY purchase_date DESC,
           ratio DESC
 """
 
-#TODO: replace customer name
+# TODO: replace customer name
 GrossIncome = """
 SELECT 
     a.customer_name, b.*
@@ -214,7 +213,7 @@ WHERE
 ORDER BY b.purchase_date DESC , VIN ASC;
 """
 
-#TODO: replace customer name
+# TODO: replace customer name
 GrossIncomeBy = """
 SELECT 
     a.customer_name, b.*
@@ -294,7 +293,6 @@ GROUP BY a.manu_name,b.vehicleTypeID
 ORDER BY repair_type;
 """
 
-
 RepairByType = """
 SELECT 
     SUM(repair_count) AS repair_model,
@@ -316,7 +314,6 @@ GROUP BY a.manu_name , b.vehicleTypeID , a.model_name
 ORDER BY repair_model;
 """
 
-
 DrilldownReport = """
 SELECT p.VIN, s.username, SUM(p.sold_price) AS totalDollar, COUNT(*) AS totalCar
 FROM Purchase AS p
@@ -325,4 +322,11 @@ ON s.salesInputterID = p.salesInputterID
 WHERE YEAR(p.purchase_date)=%s AND MONTH(p.purchase_date)=%s
 GROUP BY p.salesInputterID
 ORDER BY totalCar, totalDollar DESC;
+"""
+
+InsertIndividual = """
+INSERT INTO Individual(driver_license, customerID, ind_first_name, ind_last_name) VALUES (%s, %s, %s, %s);
+"""
+InsertBusiness = """
+INSERT INTO Business(tax_ID, customerID, business_name, title, contact_name) VALUES (%s, %s, %s, %s, %s);
 """
