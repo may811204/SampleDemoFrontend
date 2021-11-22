@@ -288,7 +288,6 @@ Christie
 @app.route('/add_customer', methods=['POST', 'GET'])
 def add_customer():
     if request.method == 'POST':
-        print(request.form)
         street_address = request.form["street_address"]
         city = request.form["city"]
         state = request.form["state"]
