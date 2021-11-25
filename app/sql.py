@@ -1,4 +1,5 @@
 DummySQL = "SELECT * FROM Car"
+GetAllCustomers = "SELECT * FROM Customer"
 FilterCustomer = "SELECT * FROM Customer where customerID=%s"
 SalesByManufacturer = """
 SELECT allManu.manu_name, COALESCE(`30days`, '0') as '30days', COALESCE(`365days`, '0') as '365days', COALESCE(`allTime`, '0') as 'allTime' FROM Manufacturer AS allManu
@@ -329,4 +330,11 @@ INSERT INTO Individual(driver_license, customerID, ind_first_name, ind_last_name
 """
 InsertBusiness = """
 INSERT INTO Business(tax_ID, customerID, business_name, title, contact_name) VALUES (%s, %s, %s, %s, %s);
+"""
+
+InsertPurchase = """
+INSERT INTO Purchase(salesInputterID, VIN, customerID, purchase_date, sold_price) VALUES (%s, %s, %s, %s, %s);
+"""
+SearchUnsoldVehicles = """
+SELECT a. * FROM Vehicle AS a WHERE a.VIN NOT IN (SELECT VIN FROM Purchase);
 """

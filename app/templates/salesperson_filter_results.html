@@ -1,0 +1,41 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="container">
+      <h1>Salesperson Filter results</h1>
+      <table class="table table-striped w-auto">
+          <thead>
+            <tr>
+              <th>VIN</th>
+              <th>Vehicle Type</th>
+              <th>Model Year</th>
+              <th>Manufacturer</th>
+              <th>Model</th>
+              <th>Colors</th>
+              <th>List Price</th>
+              <th>Sale</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="table-info">
+          {% for record in records %}
+              <td>{{record.vin}}</td>
+              <td>{{record.vehicle_type}}</td>
+              <td>{{record.model_year}}</td>
+              <td>{{record.manu_name}}</td>
+              <td>{{record.model_name}}</td>
+              <td>List Price</td>
+              <td>Colors</td>
+              <td>
+                  <form action="{{ url_for('sale_vehicle', select_vin = record.vin) }}" method="post">
+                      <button type='submit' name='select_vin' value='select_vin' class='btn btn-danger'>Sale</button>
+                  </form>
+              </td>
+            {% endfor%}
+          </tbody>
+        </table>
+    <a href="{{ url_for('index') }}">Return to Home</a>
+  </div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

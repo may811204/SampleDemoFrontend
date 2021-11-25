@@ -1,0 +1,45 @@
+{% extends "layout/login_base.html" %}
+{% block body %}
+  <div class="container">
+      <h1>Filter results</h1>
+      <p class="lead">Matched Customers</p>
+      <table class="table table-striped w-auto">
+          <thead>
+            <tr>
+              <th>CustomerID</th>
+              <th>Street Address</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Postal Code</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Is Individual</th>
+              <th>Select this customer!</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+          {% for record in records %}
+              <td>{{record.customer_id}}</td>
+              <td>{{record.street_address}}</td>
+              <td>{{record.city}}</td>
+              <td>{{record.state}}</td>
+              <td>{{record.postal_code}}</td>
+              <td>{{record.email}}</td>
+              <td>{{record.phone}}</td>
+              <td>{{record.is_individual}}</td>
+              <td>
+                  <form action="{{ url_for('add_order', vin=vin, customer_id=record.customer_id ) }}">
+                      <button type='submit' name='vin' value='vin' class='btn btn-danger'>Select Me!</button>
+                  </form>
+              </td>
+            {% endfor%}
+          </tbody>
+        </table>
+    <a href="{{ url_for('add_customer') }}">Add Customer</a>
+    <a href="{{ url_for('index') }}">Return to Home</a>
+  </div>
+{% endblock %}
+{% block footer %}
+  {% include "include/footer.html" %}
+{% endblock %}

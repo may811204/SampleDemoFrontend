@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, render_template, request, flash, session, jsonify
+import datetime
 import mysql.connector as mysql
 from functools import wraps
 from app.constants import Colors, Manufacturer, VehicleTypes
@@ -47,6 +48,7 @@ def calculate_available_vehicles():
     available_vehicles = cursor.fetchone()
     return available_vehicles[0]
 
+
 """
 Christie
 """
@@ -68,9 +70,12 @@ def load_vehicles():
         d[i] = v
     return d
 
+
 """
 Christie
 """
+
+
 @app.route("/monthly_drilldown/<yyyymm>", methods=["GET"])
 def monthly_drilldown_reports(yyyymm):
     # FirstName-LastName-TaxID
@@ -85,6 +90,8 @@ def monthly_drilldown_reports(yyyymm):
 """
 Christie
 """
+
+
 @app.route("/sales_by_manufacturer", methods=["GET"])
 def sales_by_manufacturer_reports():
     db_connection.reconnect()
@@ -93,9 +100,11 @@ def sales_by_manufacturer_reports():
     sales_by_manufacturer = cursor.fetchall()
     return render_template('reports/sales_by_manufacturer.html', records=sales_by_manufacturer)
 
+
 """
 Christie
 """
+
 
 @app.route("/sales_by_type", methods=["GET"])
 def sales_by_type_reports():
@@ -110,6 +119,7 @@ def sales_by_type_reports():
 Christie
 """
 
+
 @app.route("/part_stats", methods=["GET"])
 def part_stats_reports():
     db_connection.reconnect()
@@ -118,9 +128,12 @@ def part_stats_reports():
     part_stats = cursor.fetchall()
     return render_template('reports/part_stats.html', records=part_stats)
 
+
 """
 Christie
 """
+
+
 @app.route("/below_cost", methods=["GET"])
 def below_cost_reports():
     db_connection.reconnect()
@@ -129,9 +142,12 @@ def below_cost_reports():
     below_cost = cursor.fetchall()
     return render_template('reports/below_cost.html', records=below_cost)
 
+
 """
 Christie
 """
+
+
 # TODO: add two queries together
 @app.route("/gross_income", methods=["GET"])
 def gross_income_reports():
@@ -141,9 +157,12 @@ def gross_income_reports():
     gross_income = cursor.fetchall()
     return render_template('reports/gross_income.html', records=gross_income)
 
+
 """
 Christie
 """
+
+
 @app.route("/monthly_sale", methods=["GET"])
 def monthly_sale_reports():
     db_connection.reconnect()
@@ -152,9 +171,12 @@ def monthly_sale_reports():
     monthly_sale = cursor.fetchall()
     return render_template('reports/monthly_sale.html', records=monthly_sale)
 
+
 """
 Christie
 """
+
+
 @app.route("/repair_reports", methods=["GET"])
 def repair_reports():
     db_connection.reconnect()
@@ -165,9 +187,12 @@ def repair_reports():
     repair_by_manufacturer = cursor.fetchall()
     return render_template('reports/repair_reports.html', records=repair_by_manufacturer)
 
+
 """
 Christie
 """
+
+
 @app.route("/avg_inventory", methods=["GET"])
 def avg_inventory_reports():
     db_connection.reconnect()
@@ -176,9 +201,11 @@ def avg_inventory_reports():
     avg_inventory = cursor.fetchall()
     return render_template('reports/avg_inventory.html', records=avg_inventory)
 
+
 """
 Christie
 """
+
 
 @app.route("/sales_by_color", methods=["GET"])
 def sales_by_color_reports():
@@ -189,10 +216,10 @@ def sales_by_color_reports():
     return render_template('reports/sales_by_color.html', records=sales_by_color)
 
 
-
 """
 Christie
 """
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -258,6 +285,7 @@ def register():
 Christie
 """
 
+
 @app.route('/add_vehicle', methods=['POST'])
 def add_vehicle():
     if request.method == 'POST':
@@ -273,12 +301,15 @@ def add_vehicle():
         session['vin'] = vin
         cur = db_connection.cursor()
         cur.execute("insert into Vehicle(VIN, invoice_price, manu_name, inbound_date, model_year, model_name, optional_description, vehicleTypeID, vehicleInputterID)\
-        values(%s,%s,%s,%s,%s,%s,%s,%s,%s)", (vin, invoice_price, manu_name, inbound_date, model_year, model_name, optional_description, vehicleTypeID, vehicleInputterID))
+        values(%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
+        vin, invoice_price, manu_name, inbound_date, model_year, model_name, optional_description, vehicleTypeID,
+        vehicleInputterID))
         db_connection.commit()
         cur.close()
         flash('Registration Successfully. Login Here...', 'success')
         return redirect('view_vehicle')
     return render_template("vehicle.html")
+
 
 """
 Christie
@@ -297,7 +328,8 @@ def add_customer():
         is_individual = request.form['is_individual']
         cur = db_connection.cursor()
         cur.execute("INSERT INTO Customer(street_address, city, state, postal_code, email_address, phone_number, is_individual)\
-        values(%s,%s,%s,%s,%s,%s,%s)", (street_address, city, state, postal_code, email_address, phone_number, is_individual))
+        values(%s,%s,%s,%s,%s,%s,%s)",
+                    (street_address, city, state, postal_code, email_address, phone_number, is_individual))
         db_connection.commit()
         cur.close()
         flash('Registration Successfully.', 'success')
@@ -306,7 +338,6 @@ def add_customer():
         else:
             return redirect('add_business')
     return render_template('register_customer.html')
-
 
 
 """
@@ -395,8 +426,6 @@ def public_search():
         color = request.form['color']
         list_price = request.form['list_price']
         key_word = request.form['key_word']
-        print("[Search data]: search filters: ", vin, vehicle_type, manufacturer, model_year, color, list_price,
-              key_word)
         db_connection.reconnect()
         cursor = db_connection.cursor()
         cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin,))
@@ -415,6 +444,8 @@ def public_search():
                 'vehicle_type_id': m[8]
             }
             records.append(info)
+    if session['role'] == SALESPERSON:
+        return render_template("salesperson_filter_results.html", records=records)
     return render_template("manager_filter_results.html", records=records)
 
 
@@ -446,8 +477,41 @@ def search_customer():
                 'is_individual': customer[7]
             }
             records.append(info)
+
+    if session['role'] == SALESPERSON:
+        return render_template("salesperson_customer_filter_results.html", records=records,
+                               vin=session['propose_to_sale'])
     return render_template("customer_filter_results.html", records=records)
 
+
+@app.route("/sale_vehicle/<select_vin>", methods=["POST"])
+def sale_vehicle(select_vin):
+    session['propose_to_sale'] = select_vin
+    return render_template("salesperson_customer_search.html")
+
+
+@app.route('/add_order/<vin>/<customer_id>', methods=['GET'])
+def add_order(vin, customer_id):
+    current_date = datetime.datetime.now()
+    return render_template("order.html", vin=vin, customer_id=customer_id, role='dyu', current_date=current_date)
+
+
+# sold_price > 95% * invoice_price
+@app.route('/submit_order', methods=['POST'])
+def submit_order():
+    current_date = datetime.datetime.now()
+    if request.method == 'POST':
+        vin = request.form['vin']
+        sales_inputter_id = request.form['sales_inputter_id']
+        sold_price = request.form['sold_price']
+        customer_id = request.form['customer_id']
+        db_connection.reconnect()
+        cur = db_connection.cursor()
+        cur.execute(InsertPurchase, (sales_inputter_id, vin, customer_id, current_date, sold_price))
+        db_connection.commit()
+        cur.close()
+        flash('Order Submitted Correctly!', 'info')
+    return redirect('home')
 
 
 @app.route("/switch_role", methods=["POST"])
@@ -455,7 +519,6 @@ def switch_role():
     session['switch_to_role'] = request.form['switch']
     print(session)
     return redirect(request.referrer)
-
 
 
 """
@@ -471,12 +534,14 @@ def index():
     print("roland_login_as_other: ", s)
     if role == MANAGER or roland_login_as_other(session, MANAGER):
         available_car_amount = calculate_available_vehicles()
-        return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes, available_car_amount=available_car_amount)
+        return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes,
+                               available_car_amount=available_car_amount)
     elif role == INVENTORY_CLERK or roland_login_as_other(session, INVENTORY_CLERK):
         return render_template("clerk.html", params=role)
     elif role == SERVICE_WRITER or roland_login_as_other(session, SERVICE_WRITER):
         return render_template("writer.html", params=role)
     elif role == SALESPERSON or roland_login_as_other(session, SALESPERSON):
-        return render_template("salesperson.html", params=role)
+        return render_template("salesperson.html", params=role, colors=Colors, manufacturers=Manufacturer,
+                               vehicles_types=VehicleTypes)
     elif role == ROLAND_AROUND:
         return render_template('roland.html', colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes)
