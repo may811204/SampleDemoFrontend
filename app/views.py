@@ -419,31 +419,33 @@ Christie
 @app.route("/search_data", methods=["POST", "GET"])
 def public_search():
     if request.method == 'POST':
-        vin = request.form['vin']
-        vehicle_type = request.form['vehicle_type']
-        manufacturer = request.form['manufacturer']
-        model_year = request.form['model_year']
-        color = request.form['color']
-        list_price = request.form['list_price']
-        key_word = request.form['key_word']
-        db_connection.reconnect()
-        cursor = db_connection.cursor()
-        cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin,))
-        matches = cursor.fetchall()
-        records = []
-        for m in matches:
-            info = {
-                'vin': m[0],
-                'invoice_price': m[1],
-                'manu_name': m[2],
-                'inbound_date': m[3],
-                'model_year': m[4],
-                'model_name': m[5],
-                'optional_description': m[6],
-                'vehicle_type': m[7],
-                'vehicle_type_id': m[8]
-            }
-            records.append(info)
+        print(request.form)
+        # vin = request.form['vin']
+        # vehicle_type = request.form['vehicle_type']
+        # manufacturer = request.form['manufacturer']
+        # model_year = request.form['model_year']
+        # color = request.form['color']
+        # list_price = request.form['list_price']
+        # key_word = request.form['key_word']
+        # db_connection.reconnect()
+        # cursor = db_connection.cursor()
+        # cursor.execute("SELECT * FROM Vehicle WHERE VIN=%s", (vin,))
+        # matches = cursor.fetchall()
+        # records = []
+        # for m in matches:
+        #     info = {
+        #         'vin': m[0],
+        #         'invoice_price': m[1],
+        #         'manu_name': m[2],
+        #         'inbound_date': m[3],
+        #         'model_year': m[4],
+        #         'model_name': m[5],
+        #         'optional_description': m[6],
+        #         'vehicle_type': m[7],
+        #         'vehicle_type_id': m[8]
+        #     }
+        #     records.append(info)
+    records = []
     if session['role'] == SALESPERSON:
         return render_template("salesperson_filter_results.html", records=records)
     return render_template("manager_filter_results.html", records=records)
@@ -526,15 +528,47 @@ Christie
 """
 
 
+def dynamic_dropdown():
+    db_connection.reconnect()
+    cursor = db_connection.cursor()
+    cursor.execute(SelectDistinctVIN)
+    vin = cursor.fetchall()
+    cursor.execute(SelectDistinctTypeName)
+    vehicles_types = cursor.fetchall()
+    cursor.execute(SelectDistinctModelYear)
+    model_years = cursor.fetchall()
+    cursor.execute(SelectDistinctColor)
+    colors = cursor.fetchall()
+    cursor.execute(SelectDistinctManufacturer)
+    manufacturers = cursor.fetchall()
+    list_vin = map(lambda x: x[0], vin)
+    list_vehicles_types = map(lambda x: x[0], vehicles_types)
+    list_model_year = map(lambda x: x[0], model_years)
+    list_of_colors = map(lambda x: x[0], colors)
+    list_of_manufacturers = map(lambda x: x[0], manufacturers)
+    d = {
+        'vin' : list_vin,
+        'vehicles_types' : list_vehicles_types,
+        'model_year': list_model_year,
+        'colors': list_of_colors,
+        'manufacturers': list_of_manufacturers
+    }
+    return d
+
+
 @app.route('/home', methods=['GET'])
 @is_logged_in
 def index():
     role = session['role']
-    s = roland_login_as_other(session, MANAGER)
-    print("roland_login_as_other: ", s)
+    dropdown_data = dynamic_dropdown()
     if role == MANAGER or roland_login_as_other(session, MANAGER):
         available_car_amount = calculate_available_vehicles()
-        return render_template("manager.html", colors=Colors, manufacturers=Manufacturer, vehicles_types=VehicleTypes,
+        return render_template("manager.html",
+                               vin=dropdown_data.get('vin', []),
+                               colors=dropdown_data.get('colors', []),
+                               manufacturers=dropdown_data.get('manufacturers', []),
+                               vehicles_types=dropdown_data.get('vehicles_types', []),
+                               model_year=dropdown_data.get('model_year', []),
                                available_car_amount=available_car_amount)
     elif role == INVENTORY_CLERK or roland_login_as_other(session, INVENTORY_CLERK):
         return render_template("clerk.html", params=role)

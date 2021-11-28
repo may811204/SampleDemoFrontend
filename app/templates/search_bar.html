@@ -8,7 +8,12 @@
           <form action="{{ url_for('public_search') }}" method="post">
             <div class='form-group'>
               <label>VIN</label>
-              <input type='text' name='vin' required class='form-control'>
+              <select class="form-control" name="vin" id="vin">
+                  <option selected>Select VIN</option>
+                  {% for v in vin %}
+                    <option value= "{{v}}" SELECTED>{{v}}</option>"
+                  {% endfor %}
+                </select>
             </div>
             <div class='form-group'>
               <label>Vehicle type</label>
@@ -30,7 +35,12 @@
             </div>
             <div class='form-group'>
               <label>Model Year</label>
-              <input type='text' name='model_year' required class='form-control'>
+              <select class="form-control" name="model_year" id="model_year">
+                  <option selected>Select Model Year</option>
+                  {% for year in model_year %}
+                    <option value= "{{year}}" SELECTED>{{year}}</option>"
+                  {% endfor %}
+                </select>
             </div>
             <div class='form-group'>
               <label>Color</label>
@@ -43,11 +53,11 @@
             </div>
             <div class='form-group'>
               <label>List Price</label>
-              <input type='text' name='list_price' required class='form-control'>
+              <input type='text' name='list_price' class='form-control'>
             </div>
            <div class='form-group'>
               <label>Key Word</label>
-              <input type='text' name='key_word' required class='form-control'>
+              <input type='text' name='key_word' class='form-control'>
             </div>
             <div class='form-group'>
               <label>Vehicles Status</label>

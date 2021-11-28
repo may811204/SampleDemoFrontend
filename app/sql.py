@@ -338,3 +338,18 @@ INSERT INTO Purchase(salesInputterID, VIN, customerID, purchase_date, sold_price
 SearchUnsoldVehicles = """
 SELECT a. * FROM Vehicle AS a WHERE a.VIN NOT IN (SELECT VIN FROM Purchase);
 """
+SelectDistinctVIN = """
+SELECT distinct VIN FROM Vehicle order by VIN
+"""
+SelectDistinctTypeName = """
+SELECT distinct type_name FROM VehicleType order by type_name
+"""
+SelectDistinctManufacturer = """
+SELECT distinct manu_name FROM Manufacturer order by manu_name
+"""
+SelectDistinctModelYear = """
+SELECT distinct model_year FROM Vehicle order by model_year DESC
+"""
+SelectDistinctColor = """
+SELECT distinct color FROM VehicleColor order by color
+"""
